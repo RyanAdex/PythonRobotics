@@ -187,7 +187,7 @@ def calc_frenet_paths(c_speed, c_d, c_d_d, c_d_dd, s0):
                 tfp = copy.deepcopy(fp)
                 lon_qp = quartic_polynomial(s0, c_speed, 0.0, tv, 0.0, Ti)
 
-                tfp.s = [lon_qp.calc_point(t) for t in fp.t]
+                tfp.s = [lon_qp.calc_point(t) for t in fp.t]#计算s-t坐标点
                 tfp.s_d = [lon_qp.calc_first_derivative(t) for t in fp.t]
                 tfp.s_dd = [lon_qp.calc_second_derivative(t) for t in fp.t]
                 tfp.s_ddd = [lon_qp.calc_third_derivative(t) for t in fp.t]
@@ -206,20 +206,20 @@ def calc_frenet_paths(c_speed, c_d, c_d_d, c_d_dd, s0):
 
     return frenet_paths
 
-
+#思考：可以以s为起点向前某一距离计算样条曲线，这样可以减少计算量
 def calc_global_paths(fplist, csp):
 
     for fp in fplist:
 
         # calc global positions
         for i in range(len(fp.s)):
-            ix, iy = csp.calc_position(fp.s[i])
+            ix, iy = csp.calc_position(fp.s[i])#样条曲线，根据s点的位置在csp（路径）计算经纬度
             if ix is None:
                 break
-            iyaw = csp.calc_yaw(fp.s[i])
-            di = fp.d[i]
-            fx = ix + di * math.cos(iyaw + math.pi / 2.0)
-            fy = iy + di * math.sin(iyaw + math.pi / 2.0)
+            iyaw = csp.calc_yaw(fp.s[i])#偏航角
+            di = fp.d[i]#沿s[i]的法线方向平移d[i]
+            fx = ix + di * math.cos(iyaw + math.pi / 2.0)#=-sin(iyaw)
+            fy = iy + di * math.sin(iyaw + math.pi / 2.0)#=cos(iyaw)
             fp.x.append(fx)
             fp.y.append(fy)
 

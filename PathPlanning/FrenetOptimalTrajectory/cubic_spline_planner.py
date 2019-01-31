@@ -14,7 +14,7 @@ class Spline:
     Cubic Spline class
     """
 
-    def __init__(self, x, y):
+    def __init__(self, x, y):#初始化用于计算系数
         self.b, self.c, self.d, self.w = [], [], [], []
 
         self.x = x
@@ -139,12 +139,12 @@ class Spline2D:
         self.sy = Spline(self.s, y)
 
     def __calc_s(self, x, y):
-        dx = np.diff(x)
+        dx = np.diff(x)#点之间的差值
         dy = np.diff(y)
-        self.ds = [math.sqrt(idx ** 2 + idy ** 2)
+        self.ds = [math.sqrt(idx ** 2 + idy ** 2)#点与点的距离
                    for (idx, idy) in zip(dx, dy)]
         s = [0]
-        s.extend(np.cumsum(self.ds))
+        s.extend(np.cumsum(self.ds))#frenet的s坐标
         return s
 
     def calc_position(self, s):
